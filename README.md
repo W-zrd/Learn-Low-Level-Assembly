@@ -1,5 +1,3 @@
-# Learn-Low-Level-Assembly
-
 # Description
 
 **My Notion notes when learning about the basics of Assembly, Computer Architecture, and a bit of Operating Systems** started from early-2023. This repo is basically my learning progress about assembly which will be updated continuously whenever I get confused.
@@ -31,6 +29,10 @@ I have an interest in low-level analysis, such as reversing a program, Return Or
 - [Addressing Modes](#addressing-modes)
 - [Practice (Reversing a simple program) - (TODO)](#practice-reversing-a-simple-program---todo)
 
+# Memory Layout - (TODO)
+
+![Untitled](img/x86_memory_layout.png)
+
 # Stack Layout
 
 Stack bersifat LIFO (Last In, First Out), yang berarti data yang dimasukkan terakhir akan keluar pertama kali. **Stack tumbuh dari address yang tinggi ke address yang lebih rendah**. Namun, susunan variable local pada stack di memory tergantung compilernya
@@ -41,9 +43,9 @@ Setiap arsitektur prosesor memiliki layout yang berbeda.
 
 ## Arsitektur x86
 
-Seperti yang sudah dijelaskan sebelumnya, di dalam layout memory terdapat Stack yang berfungsi untuk mengelola function call dan return address. Stack ini sendiri terdiri atas beberapa bagian, yaitu sebagai berikut.
+Di dalam layout memory terdapat Stack yang berfungsi untuk mengelola function call dan return address. Stack ini sendiri terdiri atas beberapa bagian, yaitu sebagai berikut.
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled.png)
+![Untitled](img/x86-stack-layout.png)
 
 - **Saved EBP:** Nilai EBP yang disimpan pada awal frame. Lokasi awal (base) dari frame fungsi saat ini
 - **Return Address:** Saat fungsi dipanggil, return address disimpan di dalam stack agar program dapat kembali ke instruksi berikutnya setelah function call selesai
@@ -57,7 +59,7 @@ Terdapat beberapa perbedaan antara arsitektur x86 dengan x86-64.
 - **Register:** Pada arsitektur x86-64, nama register diawali dengan prefix “R” (Register). Contohnya seperti RAX, RBX, RCX, dan RDX.
 - **Parameter:** Setiap parameter fungsi akan ditambahkan ke dalam register RDI, RSI, RDX, RCX, R8, dan R9 secara berurutan. Jika parameter lebih dari 6, maka akan disimpan di dalam stack.
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%201.png)
+![Untitled](img/x64-stack-layout.png)
 
 # Register
 
@@ -65,7 +67,7 @@ Register dan stack merupakan 2 konsep yang berbeda.  **Register terletak di dala
 
 Nama register berbeda-beda tergantung arsitekturnya. Misalnya **`RBX`** merupakan register 64 bit, sedangkan **`EBX`** adalah versi 32-bit dari register `RBX`, begitupun dengan register lainnya. Pada arsitektur x86-64 terdapat register tambahan, yaitu `r8` sampai `r15`. Register tersebut hanya ada pada arsitektur x86-64 saja.
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%202.png)
+![Registers](img/registers.png)
 
 Note: Higher 8-bit register pada Index dan Pointer register tidak dapat diakses pada memori.
 
@@ -91,7 +93,7 @@ Note: Higher 8-bit register pada Index dan Pointer register tidak dapat diakses 
 
 Alamat memori selalu direpresentasikan dalam bentuk heksadesimal. Dalam sistem bilangan heksadesimal, setiap digit mewakili 4 bit (setengah byte) data. **Alamat memori pada sistem operasi dapat menyimpan 1 byte data**. Oleh karena itu untuk mewakili 1 byte dalam notasi hexa, kita memerlukan dua digit hexadecimal.
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%203.png)
+![Untitled](img/memory-address.png)
 
 Dalam sistem 32-bit, sebuah alamat memori memiliki panjang 32 bit (4 byte). Jika kita ingin merepresentasikan alamat memori itu dalam notasi hex, kita membutuhkan 8 digit hexa karena setiap digit mewakili 4 bit. Jadi, untuk memecah alamat memori 32-bit menjadi empat bagian, masing-masing direpresentasikan oleh dua digit heksadesimal, kita memperoleh total 8 digit heksadesimal.
 
@@ -111,7 +113,7 @@ Endianness adalah cara memori dalam mengurutkan address pada memori komputer. Da
 - Misalnya pada representasi desimal, bilangan yang paling kecil adalah digit terakhir atau paling kanan.
 - Contoh: Dalam bilangan biner 10100, bit paling kanan (atau terakhir) adalah LSB, yang memiliki nilai 0.
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%204.png)
+![Untitled](img/endianness.png)
 
 Pada dunia komputer, ada dua jenis endianness:
 
@@ -136,9 +138,92 @@ Jadi, base address adalah titik awal atau referensi, sedangkan offset adalah jar
 
 > Offset = AlamatInstruksi - Base Address
 
+
+# System Call
+
+System call adalah *special function* yang memungkinkan program untuk berinteraksi dengan operating system. Program akan berpindah dari user mode ke kernel mode untuk mengakses layanan yang disediakan oleh kernel.
+
+Ketika program melakukan syscall, kernel menggunakan **nomor syscall (syscall NR)** untuk menemukan fungsi kernel yang sesuai untuk dipanggil. Nomor ini digunakan untuk menentukan tindakan yang harus diambil oleh kernel.
+
+Berbagai macam jenis syscall dan nomor uniknya dapat dilihat pada **Linux Syscall Table** berikut.
+
+- **[x86 (32-bit) Syscall Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86-32_bit)**
+- **[x86-64 (64-bit) Syscall Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit)**
+
+Pada arsitektur x86 (32-bit), **nomor syscall akan berbeda** dari yang digunakan pada arsitektur x86-64 (64-bit) karena ada perbedaan *calling convention* serta perbedaan jumlah syscall yang tersedia pada masing-masing arsitektur. Oleh karena itu, saat menulis program dalam bahasa assembly perlu diperhatikan nomor syscall yang sesuai dengan arsitektur yang digunakan.
+
+| arch | syscall NR | arg 0 | arg 1 | arg 2  | arg 3 | arg 4 | arg 5 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| arm | r7 | r0 | r1 | r2 | r3 | r4 | r5 |
+| arm64 | x8 | x0 | x1 | x2 | x3 | x4 | x5 |
+| x86 | eax | ebx | ecx | edx | esi | edi | ebp |
+| x86-64 | rax | rdi | rsi | rdx | r10 | r8 | r9 |
+
+**Nomor system call akan selalu disimpan pada register `rax` sedangkan kode file descriptor disimpan pada register `rdi` (x86-64) atau `ebx` (x86).**
+
+**File descriptor**:
+
+- 0: stdin (standar input)
+- 1: stdout (standar output)
+- 2: stderr (standar error)
+
+Berikut adalah system call yang sering digunakan:
+
+## sys_open
+
+- **Fungsi:** Membuka file.
+- **[Parameter](https://man7.org/linux/man-pages/man2/open.2.html):** Nama file yang akan dibuka, mode akses, dan mode pembuatan file.
+
+```nasm
+mov rax, 2            ; Syscall NR untuk open
+mov rdi, filename     ; arg0: Nama file yg akan dibuka
+mov rsi, [flags]      ; arg1: Mode akses
+mov rdx, [mode]       ; arg2: Mode pembuatan file
+syscall               ; Interrupt (system call)
+```
+
+## sys_read
+
+- **Fungsi:** Membaca data dari sebuah file deskriptor ke dalam buffer yang disediakan oleh program.
+- **[Parameter](https://man7.org/linux/man-pages/man2/read.2.html):**  file deskriptor, alamat buffer tempat data akan disimpan, dan panjang data yang akan dibaca.
+- File descriptor dapat bernilai 0, 1, atau 2. Namun, karena `read` berarti membaca input user, maka nilai `fd` adalah 0 (`stdin`)
+
+```nasm
+mov rax, 0               ; Nomor syscall read
+mov rdi, file_descriptor ; file descriptor untuk standard input adalah 0
+mov rsi, buffer          ; Alamat buffer untuk menyimpan data yang dibaca
+mov rdx, buffer_size     ; Panjang data yang akan dibaca
+syscall                  ; Interrupt (system call)
+```
+
+## sys_write
+
+- **Fungsi:** menulis data dari buffer ke sebuah file deskriptor
+- **[Parameter](https://man7.org/linux/man-pages/man2/write.2.html):** Parameter yang dibutuhkan untuk syscall **`write`** adalah file deskriptor, address buffer, dan panjang data yang akan ditulis.
+- File descriptor dapat bernilai 0, 1, atau 2. Namun, karena `write` berarti mengeluarkan output, maka nilai `fd` adalah 1 (`stdout`)
+
+```nasm
+mov rax, 1               ; Nomor syscall untuk write
+mov rdi, file_descriptor ; file descriptor untuk standard output adalah 1
+mov rsi, buffer          ; data yang akan ditulis
+mov rdx, buffer_size     ; Panjang data yang akan ditulis
+syscall                  ; Interrupt (system call)
+```
+
+## sys_exit
+
+- **Fungsi:** mengakhiri proses yang sedang berjalan dan mengembalikan exit code ke OS.
+- **[Parameter](https://man7.org/linux/man-pages/man2/exit.2.html):** exit code yang menunjukkan apakah proses keluar dengan sukses atau gagal.
+
+```nasm
+mov rax, 60           ; Nomor syscall untuk exit
+xor rdi, rdi          ; Exit Code untuk keluar (0: sukses)
+syscall               ; Interrupt (system call)
+```
+
 # Addressing Modes
 
-![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%205.png)
+![Untitled](img/assembly-syntax.png)
 
 ### Immediate Addressing
 
@@ -223,5 +308,5 @@ _start:
 
 ## Crackmes: …
 
-- **Challenge URL:**
+- **Challenge URL:** https://microcorruption.com/debugger/New%20Orleans
 - **Goals:**
