@@ -1,3 +1,5 @@
+# Learn-Low-Level-Assembly
+
 # Description
 
 **My Notion notes when learning about the basics of Assembly, Computer Architecture, and a bit of Operating Systems** started from early-2023. This repo is basically my learning progress about assembly which will be updated continuously whenever I get confused.
@@ -211,3 +213,15 @@ _start:
 ```
 
 - Misalnya, ketika program memiliki instruksi **`JMP <label>`**, RIP perlu tahu ke mana harus melompat. Tapi bagaimana RIP mengetahui di mana **`label`** berada? Jawabannya adalah dengan menggunakan relative addressing.
+
+# **Practice (Reversing a simple program) - (TODO)**
+
+## Microcorruption: New Orleans
+
+- **Challenge URL:**
+- **Goals:**
+
+## Crackmes: …
+
+- **Challenge URL:**
+- **Goals:**
