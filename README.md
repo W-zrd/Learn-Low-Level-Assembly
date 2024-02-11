@@ -1,3 +1,31 @@
+# Learn-Low-Level-Assembly
+
+# Description
+
+**My Notion notes when learning about the basics of Assembly, Computer Architecture, and a bit of Operating Systems** started from early-2023. This repo is basically my learning progress about assembly which will be updated continuously whenever I get confused.
+
+I have an interest in low-level analysis, such as reversing a program, Return Oriented Programming, and exploiting ELF binary, which is why im learning this language. I often forget how things work in Assembly and Computer Architecture because it’s so hard to understand at the beginning. So when it happens, i usually take a note. And here's what I've learned so far.
+
+# Table of Contents
+
+- **Memory Layout - (TODO)**
+- **Stack Layout**
+    - Arsitektur x86
+    - Arsitektur x86-64
+- **Register**
+    - General Purpose Register
+    - Index Register
+    - Pointer Register
+- **Memory Address**
+    - Byte Ordering (*Endianness*)
+        - *Most Significant Bit* (MSB)
+        - *Least Significant Bit* (LSB)
+        - Big Endian
+        - Little Endian
+    - Base Address & Offset - **(TODO)**
+- **System Call** - **(TODO)**
+- **Addressing Modes** - **(TODO)**
+- **Practice (Reversing a simple program) - (TODO)**
 
 # Stack Layout
 
@@ -102,10 +130,7 @@ Pada dunia komputer, ada dua jenis endianness:
 
 Jadi, base address adalah titik awal atau referensi, sedangkan offset adalah jarak atau pergeseran dari titik tersebut. Offset dapat dihitung dengan rumus :
 
-$$
-Offset = AlamatInstruksi - Base Address
-$$
-
+> Offset = AlamatInstruksi - Base Address
 
 # Addressing Modes
 
@@ -120,15 +145,6 @@ $$
 ```nasm
 MOV rax, 1
 ADD rdi, 1
-```
-
-### Register Addressing
-
-- Nilai operand adalah isi dari register tertentu.
-
-```nasm
-MOV eax, ebx
-ADD ecx, edx
 ```
 
 ### Direct Addressing
@@ -168,19 +184,3 @@ _start:
     mov ebx, my_var
 		mov eax, [ebx]
 ```
-
-### Relative Addressing
-
-- Alamat memori yang digunakan sebagai operand tidak diberikan secara langsung, tetapi dihitung berdasarkan lokasi instruksi saat itu.
-- Sering digunakan dalam instruksi `jmp`.
-
-```nasm
-1:  MOV eax, 10
-2:  JMP 5
-3:  ADD eax, 5
-4:  ...
-5:  LABEL:
-6:  ...
-```
-
-- Misalnya, ketika program memiliki instruksi **`JMP <label>`**, RIP perlu tahu ke mana harus melompat. Tapi bagaimana RIP mengetahui di mana **`label`** berada? Jawabannya adalah dengan menggunakan relative addressing.
