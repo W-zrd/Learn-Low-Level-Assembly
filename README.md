@@ -1,21 +1,3 @@
-# Table of Contents
-
-- **Memory Layout - (TODO)**
-- **Stack Layout**
-    - Arsitektur x86
-    - Arsitektur x86-64
-- **Register**
-    - General Purpose Register
-    - Index Register
-    - Pointer Register
-- **Memory Address**
-    - Byte Ordering (*Endianness*)
-        - *Most Significant Bit* (MSB)
-        - *Least Significant Bit* (LSB)
-        - Big Endian
-        - Little Endian
-    - Base Address & Offset - **(TODO)**
-
 
 # Stack Layout
 
@@ -124,3 +106,81 @@ $$
 Offset = AlamatInstruksi - Base Address
 $$
 
+
+# Addressing Modes
+
+![Untitled](Learn-Low-Level-Assembly%20ad401c8d8b9c4bdc9534d44777832ba2/Untitled%205.png)
+
+### Immediate Addressing
+
+- Nilai operand diberikan secara langsung di dalam instruksi.
+- Nilai operand sudah tersedia dan tidak perlu diambil dari memori atau register lain.
+- Source Operand adalah sebuah nilai konstan
+
+```nasm
+MOV rax, 1
+ADD rdi, 1
+```
+
+### Register Addressing
+
+- Nilai operand adalah isi dari register tertentu.
+
+```nasm
+MOV eax, ebx
+ADD ecx, edx
+```
+
+### Direct Addressing
+
+- Alamat memori yang dituju (destination operand) diberikan secara langsung dalam instruksi.
+- Source operand berisi alamat memori yang langsung ditentukan dalam instruksi.
+
+```nasm
+section .data
+    ebx dd 42
+
+section .text
+    global _start
+
+_start:
+    mov eax, [ebx]
+```
+
+- Kurung siku **`[]`** menandakan pengambilan nilai dari alamat memori yang ditunjukkan di dalam kurung tersebut.
+- Pada kode tersebut, **`mov eax, [ebx]`**, register **`eax`** akan berisi nilai yang terdapat di alamat memori yang ditunjukkan oleh nilai yang tersimpan di dalam register **`ebx`**, bukan alamat memori itu sendiri.
+- **Tanpa tanda kurung siku**, **`ebx`** **akan dianggap sebagai nilai langsung** yang ingin dimuat ke dalam **`eax`**, bukan sebagai alamat memori yang mengandung nilai yang ingin dimuat.
+- Pada kode tersebut, `eax` akan bernilai `42`
+
+### Indirect Addressing
+
+- Alamat memori yang akan diakses tidak diberikan secara langsung dalam instruksi, tetapi diambil dari isi register
+- Source operand adalah register yang berisi alamat memori yang akan diakses.
+
+```nasm
+section .data
+    my_var dd 42
+
+section .text
+    global _start
+
+_start:
+    mov ebx, my_var
+		mov eax, [ebx]
+```
+
+### Relative Addressing
+
+- Alamat memori yang digunakan sebagai operand tidak diberikan secara langsung, tetapi dihitung berdasarkan lokasi instruksi saat itu.
+- Sering digunakan dalam instruksi `jmp`.
+
+```nasm
+1:  MOV eax, 10
+2:  JMP 5
+3:  ADD eax, 5
+4:  ...
+5:  LABEL:
+6:  ...
+```
+
+- Misalnya, ketika program memiliki instruksi **`JMP <label>`**, RIP perlu tahu ke mana harus melompat. Tapi bagaimana RIP mengetahui di mana **`label`** berada? Jawabannya adalah dengan menggunakan relative addressing.
