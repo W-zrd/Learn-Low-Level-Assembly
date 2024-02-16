@@ -1,3 +1,5 @@
+<p align="left"> <a href="https://www.cprogramming.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="c" width="40" height="40"/> </a> <a href="https://www.linux.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="linux" width="40" height="40"/> </a> </p>
+
 # Description
 
 **My Notion notes when learning about the basics of Assembly, Computer Architecture, and a bit of Operating Systems** started from early-2023. This repo is basically my learning progress about assembly which will be updated continuously whenever I get confused.
@@ -6,11 +8,11 @@ I have an interest in low-level analysis, such as reversing a program, Return Or
 
 # Table of Contents
 
-- **Memory Layout - (TODO)**
+- [**Memory Layout**](#memory-layout)
 - [**Stack Layout**](#stack-layout)
     - [Arsitektur x86](#arsitektur-x86)
     - [Arsitektur x86-64](#arsitektur-x86-64)
-- [**Register**](#)
+- [**Register**](#register)
     - [General Purpose Register](#general-purpose-register)
     - [Index Register](#index-register)
     - [Pointer Register](#pointer-register)
@@ -20,7 +22,7 @@ I have an interest in low-level analysis, such as reversing a program, Return Or
         - [Least Significant Bit (LSB)](#least-significant-bit-lsb)
         - [Big Endian](#big-endian)
         - [Little Endian](#little-endian)
-    - [Base Address & Offset](#base-address--offset---todo)
+    - [Base Address & Offset](#base-address--offset)
 - [**System Call**](#system-call)
     - [`sys_open`](#sys_open)
     - [`sys_read`](#sys_read)
@@ -29,9 +31,18 @@ I have an interest in low-level analysis, such as reversing a program, Return Or
 - [**Addressing Modes**](#addressing-modes)
 - [**Practice (Reversing a simple program) - (TODO)**](#practice-reversing-a-simple-program---todo)
 
-# Memory Layout - (TODO)
+# Memory Layout
+
+Pembagian memori menjadi beberapa layout bertujuan sebagai proteksi memori agar segmen-segmen berbeda dapat diberi hak akses yang berbeda. Misal, segmen teks dapat diberi hak baca saja (read-only) untuk melindungi kode program dari modifikasi. Berikut adalah visualisasi layout memory untuk arsitektur 32 bit.
 
 ![Untitled](img/x86_memory_layout.png)
+
+1. Text Segment (Kode): Menyimpan instruksi-instruksi mesin dari program yang sedang berjalan. Instruksi ini membentuk kode eksekusi program.
+2. Data Segment: Berisi variabel yang diinisialisasi dengan nilai tertentu.
+3. Heap: Alokasi memori dinamis, seperti ketika program menggunakan fungsi `malloc()` atau `new` untuk mengalokasikan memori secara dinamis.
+4. Stack: Menyimpan data dan informasi terkait fungsi-fungsi dalam program seperti variabel lokal, parameter fungsi, dan return address.
+5. Kernel Space: Area yg ditempati oleh kernel OS. Hanya kode kernel yang dapat mengakses ruang memori ini.
+
 
 # Stack Layout
 
