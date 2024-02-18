@@ -184,6 +184,7 @@ Berikut adalah system call yang sering digunakan:
 
 - **Fungsi:** Membuka file.
 - **[Parameter](https://man7.org/linux/man-pages/man2/open.2.html):** Nama file yang akan dibuka, mode akses, dan mode pembuatan file.
+- **Another References:** https://medium.com/@joshuaudayagiri/linux-system-calls-open-e194e6fe2395
 
 ```nasm
 mov rax, 2            ; Syscall NR untuk open
